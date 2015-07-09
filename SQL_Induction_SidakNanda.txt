@@ -1,0 +1,210 @@
+SELECT
+
+select first_name,last_name,designation from employee;
+
+DISTINCT
+
+select distinct designation from employee;
+
+WHERE
+
+select * from employee where salary<20000
+
+AND OR
+
+select * from employee where salary>50000 and age<35
+select * from employee where salary>50000 and designation in ('Manager','Tech Lead');
+
+ORDER BY
+
+select * from employee order by salary DESC limit 5;
+
+INSERT
+
+insert into employee values
+(
+'ankit','gupta',43,9832641111,'Manager','ag@gmail.com',40000
+);
+
+UPDATE
+
+update employee
+set
+designation='Manager', salary=50000
+where salary>40000 and age<35;
+
+DELETE
+
+delete from employee where half_yearly_grade=1 and designation='trainee';
+
+TOP
+
+select * from employee order by salary DESC limit 3;
+
+select min(salary) from employee where salary in (select distinct salary from employee order by salary DESC limit 2);
+
+select min(salary) from employee where salary in (select distinct salary from employee order by salary DESC limit 3);
+
+LIKE
+
+select salary from employee where first_name like '%akash%';
+
+WILDCARDS
+
+select * from employee where last_name like '_a_da';
+
+IN
+
+select salary from employee where salary in (10000,20000,40000);
+
+BETWEEN
+
+select salary from employee where salary BETWEEN 10000 and 40000;
+
+ALIAS
+
+select email_id AS id from employee;
+
+INNER JOIN
+
+select employee.first_name AS name,address.address
+from employee inner join address
+where employee.e_id=address.e_id;
+
+LEFT OUTER JOIN
+
+select employee.first_name AS name,address.address
+from employee left outer join address;
+
+UNION
+
+select * from abc
+UNION
+select * from lmn
+UNION
+select * from xyz;
+
+CREATE DB
+
+create database TEST_DB;
+
+CREATE TABLE
+
+create table employee
+(
+first_name varchar(30),
+last_name varchar(20),
+age text,
+phone_no text,
+designation varchar(15),
+email_id varchar(20),
+salary text,
+half_yearly_grade int
+);
+
+CONSTRAINTS (NOT NULL, UNIQUE, PRIMARY KEY, FOREIGN KEY, CHECK, DEFAULT)
+
+create table employee
+(
+e_id int NOT NULL PRIMARY KEY,
+first_name varchar(30) NOT NULL,
+last_name varchar(20),
+age text CHECK (age>20),
+phone_no text NOT NULL,
+designation varchar(15) NOT NULL,
+email_id varchar(20) NOT NULL UNIQUE,
+salary text NOT NULL,
+half_yearly_grade int DEFAULT 1
+);
+
+DROP
+
+drop table designation;
+
+INCREMENT
+
+update employee
+set salary=salary+5000;
+
+VIEWS
+
+create view managerView AS
+select * from employee
+where salary>60000 and designation='Manager';
+
+SUM OF COLUMN  WHICH HAVE A NULL
+
+select sum(half_yearly_grade) from employee;
+
+ISNULL
+
+select * from employee where last_name IS NULL;
+
+DATATYPES
+
+select first_name AS name,round(0.1275*salary,2) AS PF from employee;
+
+AVG()
+
+select * from employee where salary> (select avg(salary) from employee);
+
+COUNT()
+
+select count(salary) from employee
+where salary=65000;
+
+MAX()
+
+select * from employee
+where salary<(select max(salary) from employee);
+
+MIN()
+
+select * from employee
+where salary>(select min(salary) from employee);
+
+SUM()
+
+select sum(salary) from employee;
+
+GROUP BY
+
+select employee.first_name AS name,address.address
+from employee inner join address
+where employee.e_id=address.e_id
+group by address;
+
+HAVING
+
+select employee.first_name AS name,address.address
+from employee inner join address
+where employee.e_id=address.e_id
+group by address having employee.salary<50000;
+
+UPPER()
+
+select first_name, upper(last_name) from employee;
+
+LOWER()
+
+select first_name,lower(last_name) from employee;
+
+LENGTH()
+
+select first_name,length(first_name) AS lengthOfNames
+from employee;
+
+ROUND()
+
+select first_name,round(salary,0) AS roundedSalary
+from employee;
+
+GETDATE()
+
+select *,date('now') AS currentDate
+from employee;
+
+CASE STATEMENT
+
+select first_name AS name,case when salary<50000 and age<35 then 'yes' else
+'no' End from employee;
