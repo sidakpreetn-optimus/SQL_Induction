@@ -1,0 +1,20 @@
+**Database File- Shipment.sqlite
+
+
+
+Query--
+
+
+SELECT UserName,
+Product_Name,
+SUM(CASE WHEN Transaction_Type='Order' THEN Transaction_Amount ELSE 0 END) AS Ordered_Quantity,
+SUM(CASE WHEN Transaction_Type='Payment' THEN Transaction_Amount ELSE 0 END) AS Amount_Paid,
+MAX(Transaction_Date) AS Last_Transaction_Date,
+(SUM(CASE WHEN Transaction_Type='Order' THEN Transaction_Amount ELSE 0 END)*Cost_Per_Item)-SUM(CASE WHEN Transaction_Type='Payment' THEN Transaction_Amount ELSE 0 END) AS Balance
+FROM t_product_master p
+INNER JOIN 
+(SELECT * FROM t_user_master u
+INNER JOIN t_transaction t
+WHERE u.UserID=t.UserID) ut
+ON p.Product_ID=ut.Product_ID
+GROUP BY UserID,p.Product_ID;

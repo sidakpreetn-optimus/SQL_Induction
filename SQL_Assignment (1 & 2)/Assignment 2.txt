@@ -1,0 +1,23 @@
+**Database File- EmployeeInformation.sqlite
+
+
+
+
+Query1--
+
+SELECT (Emp_f_name || ' ' || Emp_m_name || ' ' || Emp_L_name) As Name,Emp_DOB AS DateOfBirth
+FROM t_emp
+WHERE DATE(Emp_DOB)=DATE(Emp_DOB,'start of month','+1 month','-1 day');
+
+Query2--
+
+SELECT 
+(SELECT (Emp_f_name || ' ' || Emp_m_name || ' ' || Emp_L_name) FROM t_emp WHERE t_emp.Emp_id=hours.Emp_id) AS Name,salary.[GotIncrement?] AS [Increment?],salary.PreviousSalary AS PreviousSalary,salary.CurrentSalary AS CurrentSalary,hours.TotalWorkedHours AS TotalWorkedHours,hours.LastWorkedActivity AS LastWorkedActivity,hours.HoursWorkedInLastActivity AS HoursWorkedInLastActivity
+FROM
+(SELECT Emp_id,SUM(Atten_end_hrs) AS TotalWorkedHours,Atten_end_hrs AS HoursWorkedInLastActivity,Activity_description AS LastWorkedActivity FROM t_atten_det ad INNER JOIN t_activity a ON ad.Activity_id=a.Activity_id GROUP BY Emp_id HAVING MAX(Atten_start_datetime)) hours
+INNER JOIN
+(SELECT us.Emp_id, us.CurrentSalary,us.PreviousSalary,(CASE WHEN us.CurrentSalary>us.PreviousSalary THEN 'YES' ELSE 'NO' END) AS [GotIncrement?] FROM
+(SELECT tmp.Emp_id , tmp.CurrentSalary,(SELECT t_salary.New_Salary FROM t_salary WHERE tmp.PreviousDate=t_salary.Changed_date) as PreviousSalary FROM
+(SELECT Emp_id,New_Salary AS CurrentSalary,(SELECT MAX(Changed_date) FROM t_salary WHERE sal.Emp_id=t_salary.Emp_id AND Changed_date NOT IN (SELECT MAX(Changed_date) FROM t_salary)) AS PreviousDate FROM t_salary sal GROUP BY Emp_id HAVING MAX(Changed_date)) tmp) us) salary
+ON
+hours.Emp_id=salary.Emp_id;
